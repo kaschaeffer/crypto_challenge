@@ -2,5 +2,6 @@
 
 # Ignore swap files
 *.swp
+*.swo
 
 bin/
