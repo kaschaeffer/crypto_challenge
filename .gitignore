@@ -1,7 +1,6 @@
 *.dSYM/
 
 # Ignore swap files
-*.swp
-*.swo
+*.sw*
 
 bin/

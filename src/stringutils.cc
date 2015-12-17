@@ -85,23 +85,7 @@ const std::map<std::string, double> ENGLISH_BIGRAM_FREQUENCIES = {{"th", 0.0356}
                                                                   {"om", 0.0055},
                                                                   {"ur", 0.0054}};
 
-unsigned char hexToInt(char hex) {
-  if (hex >= '0' && hex <= '9') {
-    return hex - '0';
-  }
-  if (hex >= 'A' && hex <= 'F') {
-    return hex - 'A' + 10;
-  }
-  return hex - 'a' + 10;
-}
 
-char intToHex(int i) {
-  /* assume i >=0 && i < 16 */
-  if (i >= 0 && i <= 9) {
-    return '0' + i;
-  }
-  return 'a' + (i - 10);
-}
 
 std::string bytesToHex(const std::vector<unsigned char>& bytes) {
   std::string hex;
