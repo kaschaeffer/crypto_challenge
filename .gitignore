@@ -3,4 +3,4 @@
 # Ignore swap files
 *.sw*
 
-bin/
+build/

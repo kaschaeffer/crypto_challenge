@@ -27,7 +27,7 @@ TEST(EncodingTest, BytesToBase64) {
   EXPECT_EQ(expected, base64);
 }
 
-TEST(EncodingTest, BytesToBase64) {
+TEST(EncodingTest, Base64ToBytes) {
   std::string base64 = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
   const std::vector<unsigned char> bytes = cryptolib::Base64ToBytes(base64);
 
@@ -37,3 +37,4 @@ TEST(EncodingTest, BytesToBase64) {
 }
 
 // TODO(kschaeffer): add tests for '=' and '==' cases for base64
+
