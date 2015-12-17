@@ -6,8 +6,10 @@ stand-alone library `cryptolib/`.
 
 To run the unit tests from the main folder,
 
-  mkdir build && cd build
-  cmake .. && make
-  ./runTests
+```
+mkdir build && cd build
+cmake .. && make
+./runTests
+```
 
 The unittests require [Google Test](https://github.com/google/googletest/) to be installed.
