@@ -1,3 +1,5 @@
+#include "stdlib.h"
+
 #include "gtest/gtest.h"
 #include "cryptolib/encoding.h"
 
@@ -10,13 +12,25 @@ TEST(EncodingTest, BytesToHex) {
 TEST(EncodingTest, HexToBytes) {
   std::vector<unsigned char>* bytes = cryptolib::HexToBytes("87fa12ad2e38900c");
   std::vector<unsigned char> expected_bytes = {0x87, 0xfa, 0x12, 0xad, 0x2e, 0x38, 0x90, 0x0c};
-  // TODO correct equality here?
   EXPECT_EQ(expected_bytes, *bytes);
 }
 
-// TODO add roundtrip tests for hex <--> bytes
-// using random but with deterministic seed
+unsigned char get_random_byte() {
+  return (rand() % 256);
+}
 
+TEST(EncodingTest, BytesToHexToBytes) {
+  srand(10);  // set seed, so test is reproducible
+  const int MAX_LENGTH = 100;
+  for (int i = 0; i < 5000; i++) {
+    int length = (rand() % MAX_LENGTH);
+    std::vector<unsigned char> bytes(length);
+    for (int j = 0; j < length; j++) {
+      bytes[j] = get_random_byte();
+    }
+    EXPECT_EQ(bytes, *cryptolib::HexToBytes(cryptolib::BytesToHex(bytes)));
+  }
+}
 
 TEST(EncodingTest, BytesToBase64) {
   std::string hex = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
@@ -38,3 +52,15 @@ TEST(EncodingTest, Base64ToBytes) {
 
 // TODO(kschaeffer): add tests for '=' and '==' cases for base64
 
+TEST(EncodingTest, BytesToBase64ToBytes) {
+  srand(100);  // set seed, so test is reproducible
+  const int MAX_LENGTH = 100;
+  for (int i = 0; i < 5000; i++) {
+    int length = (rand() % MAX_LENGTH);
+    std::vector<unsigned char> bytes(length);
+    for (int j = 0; j < length; j++) {
+      bytes[j] = get_random_byte();
+    }
+    EXPECT_EQ(bytes, cryptolib::Base64ToBytes(cryptolib::BytesToBase64(bytes)));
+  }
+}
