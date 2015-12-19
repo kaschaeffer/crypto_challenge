@@ -77,7 +77,33 @@ TEST(EncodingTest, Base64ToBytes) {
   EXPECT_EQ(expected, actual);
 }
 
-// TODO(kschaeffer): add tests for '=' and '==' cases for base64
+TEST(EncodingTest, BytesToBase64SinglePadding) {
+  const std::vector<unsigned char> bytes = {'f', 'o', 'o', 'b', 'a'};
+  std::string actual = cryptolib::BytesToBase64(bytes);
+  std::string expected = "Zm9vYmE=";
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(EncodingTest, BytesToBase64DoublePadding) {
+  const std::vector<unsigned char> bytes = {'f', 'o', 'o', 'b'};
+  std::string actual = cryptolib::BytesToBase64(bytes);
+  std::string expected = "Zm9vYg==";
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(EncodingTest, Base64ToBytesSinglePadding) {
+  std::string base64 = "Zm9vYmE=";
+  const std::vector<unsigned char> expected = {'f', 'o', 'o', 'b', 'a'};
+  std::vector<unsigned char> actual = cryptolib::Base64ToBytes(base64);
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(EncodingTest, Base64ToBytesDoublePadding) {
+  std::string base64 = "Zm9vYg==";
+  const std::vector<unsigned char> expected = {'f', 'o', 'o', 'b'};
+  std::vector<unsigned char> actual = cryptolib::Base64ToBytes(base64);
+  EXPECT_EQ(expected, actual);
+}
 
 TEST(EncodingTest, BytesToBase64ToBytes) {
   srand(100);  // set seed, so test is reproducible

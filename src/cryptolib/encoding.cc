@@ -100,7 +100,6 @@ std::string BytesToBase64(const std::vector<unsigned char>& raw) {
   int extraBytes = length % 3;
 
   int i = 0;
-  // for now just chop end of string
   while (i + 3 <= length) {
     base64String += bitsToBase64((raw[i] >> 2));
     base64String += bitsToBase64(((raw[i] & 0x03) << 4) + (raw[i+1] >> 4));
