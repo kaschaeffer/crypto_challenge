@@ -32,6 +32,33 @@ TEST(EncodingTest, BytesToHexToBytes) {
   }
 }
 
+std::string get_random_hex_byte() {
+  std::string hex_byte;
+  int rand_hex;
+  for (int i = 0; i < 2; i++) {
+    rand_hex = rand() % 16;
+    if (rand_hex < 10) {
+      hex_byte += ('0' + rand_hex);
+    } else {
+      hex_byte += ('a' + rand_hex - 10);
+    }
+  }
+  return hex_byte;
+}
+
+TEST(EncodingTest, HexToBytesToHex) {
+  srand(20);  // set seed, so test is reproducible
+  const int MAX_LENGTH = 100;
+  for (int i = 0; i < 5000; i++) {
+    int length = (rand() % MAX_LENGTH);
+    std::string hex;
+    for (int j = 0; j < length; j++) {
+      hex += get_random_hex_byte();
+    }
+    EXPECT_EQ(hex, cryptolib::BytesToHex(*cryptolib::HexToBytes(hex)));
+  }
+}
+
 TEST(EncodingTest, BytesToBase64) {
   std::string hex = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
   const std::vector<unsigned char>* bytes = cryptolib::HexToBytes(hex);
