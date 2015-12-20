@@ -4,6 +4,7 @@ project (crypto_challenge)
 enable_testing()
 
 SET(CMAKE_CXX_FLAGS "-fsanitize=address -fno-omit-frame-pointer -g -std=c++11 -Wall -stdlib=libc++")
+SET(CMAKE_EXE_LINKER_FLAGS "-lssl -lcrypto")
 
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} "src")
