@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 #include "cryptolib/encoding.h"
+#include "cryptolib/encrypt.h"
 
 TEST(EncodingTest, BytesToHex) {
   std::vector<unsigned char> bytes = {0x87, 0xfa, 0x12, 0xad, 0x2e, 0x38, 0x90, 0x0c};
@@ -116,4 +117,22 @@ TEST(EncodingTest, BytesToBase64ToBytes) {
     }
     EXPECT_EQ(bytes, cryptolib::Base64ToBytes(cryptolib::BytesToBase64(bytes)));
   }
+}
+
+TEST(EncryptTest, FixedXOR) {
+  std::string plaintext = "1c0111001f010100061a024b53535009";
+  std::string key = "686974207468652062756c6c27732065";
+  std::string expected_ciphertext = "746865206b696420646f6e277420706c";
+  std::string actual_ciphertext = cryptolib::BytesToHex(*cryptolib::FixedXOR(*cryptolib::HexToBytes(plaintext),
+                                                                             *cryptolib::HexToBytes(key)));
+  EXPECT_EQ(expected_ciphertext, actual_ciphertext);
+}
+
+TEST(EncryptTest, FixedXOREmptyString) {
+  std::string plaintext = "";
+  std::string key = "";
+  std::string expected_ciphertext = "";
+  std::string actual_ciphertext = cryptolib::BytesToHex(*cryptolib::FixedXOR(*cryptolib::HexToBytes(plaintext),
+                                                                             *cryptolib::HexToBytes(key)));
+  EXPECT_EQ(expected_ciphertext, actual_ciphertext);
 }
