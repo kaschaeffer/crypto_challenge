@@ -136,3 +136,36 @@ TEST(EncryptTest, FixedXOREmptyString) {
                                                                              *cryptolib::HexToBytes(key)));
   EXPECT_EQ(expected_ciphertext, actual_ciphertext);
 }
+
+TEST(EncryptTest, PadBlock) {
+  std::string plaintext = "YELLOW SUBMARINE";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+
+  std::vector<unsigned char>* actual_padded_plaintext = cryptolib::PadBlock(plaintext_bytes, 20);
+  std::string expected_padded_plaintext = "YELLOW SUBMARINE\x04\x04\x04\x04";
+  EXPECT_EQ(expected_padded_plaintext,
+            std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}
+
+TEST(EncryptTest, PadBlockZeroPadding) {
+  std::string plaintext = "YELLOW SUBMARINE";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+
+  std::vector<unsigned char>* actual_padded_plaintext = cryptolib::PadBlock(plaintext_bytes, 16);
+  std::string expected_padded_plaintext = plaintext;
+  EXPECT_EQ(expected_padded_plaintext,
+            std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}
+
+TEST(EncryptTest, PadBlockBigPadding) {
+  std::string plaintext = "ab";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+
+  std::string expected_padded_plaintext = "ab";
+  for (int i = 0; i < 98; i++) {
+    expected_padded_plaintext += 98;
+  }
+  std::vector<unsigned char>* actual_padded_plaintext = cryptolib::PadBlock(plaintext_bytes, 100);
+  EXPECT_EQ(expected_padded_plaintext,
+            std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}
