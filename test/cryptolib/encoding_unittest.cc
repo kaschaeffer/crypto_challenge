@@ -169,3 +169,23 @@ TEST(EncryptTest, PadBlockBigPadding) {
   EXPECT_EQ(expected_padded_plaintext,
             std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
 }
+
+TEST(EncryptTest, PadText) {
+  std::string plaintext = "YELLOW SUBMARINE";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+
+  std::vector<unsigned char>* actual_padded_plaintext = cryptolib::PadText(plaintext_bytes, 10);
+  std::string expected_padded_plaintext = "YELLOW SUBMARINE\x04\x04\x04\x04";
+  EXPECT_EQ(expected_padded_plaintext,
+            std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}
+
+TEST(EncryptTest, PadTextMultiple) {
+  std::string plaintext = "YELLOW SUBMARINE";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+
+  std::vector<unsigned char>* actual_padded_plaintext = cryptolib::PadText(plaintext_bytes, 8);
+  std::string expected_padded_plaintext = "YELLOW SUBMARINE\x08\x08\x08\x08\x08\x08\x08\x08";
+  EXPECT_EQ(expected_padded_plaintext,
+            std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}

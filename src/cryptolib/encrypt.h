@@ -23,6 +23,14 @@ std::vector<unsigned char>* RepeatingKeyXOREncrypt(const std::vector<unsigned ch
 std::vector<unsigned char>* PadBlock(const std::vector<unsigned char>& plaintext,
                                      int blocksize);
 
+// Pads the plaintext to make it have length equal to a multiple of blocksize,
+// using the PKCS #7 standard
+// (http://tools.ietf.org/html/rfc5652#section-6.3).
+std::vector<unsigned char>* PadText(const std::vector<unsigned char>& plaintext,
+                                     int blocksize);
+
+std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& ciphertext, 
+                                             const std::vector<unsigned char>& key);
 
 }  // namespace cryptolib
 
