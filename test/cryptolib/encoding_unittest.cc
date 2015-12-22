@@ -1,6 +1,7 @@
 #include "stdlib.h"
 
 #include "gtest/gtest.h"
+#include "cryptolib/decrypt.h"
 #include "cryptolib/encoding.h"
 #include "cryptolib/encrypt.h"
 
@@ -188,4 +189,24 @@ TEST(EncryptTest, PadTextMultiple) {
   std::string expected_padded_plaintext = "YELLOW SUBMARINE\x08\x08\x08\x08\x08\x08\x08\x08";
   EXPECT_EQ(expected_padded_plaintext,
             std::string(actual_padded_plaintext->begin(), actual_padded_plaintext->end()));
+}
+
+TEST(EncryptTest, AES128CBCEncryptDecrypt) {
+  std::string plaintext =
+    "This is a test.  Encrypting and then decrypting "
+    "this message using the AES-128 block cipher in CBC "
+    "mode should give the original message.";
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(), plaintext.end());
+  std::string key = "foobar QUUXBAZ--";
+  std::string iv = "*Initial Vector*";
+
+  std::vector<unsigned char>* ciphertext = cryptolib::EncryptAES128CBC(std::vector<unsigned char>(plaintext.begin(), plaintext.end()),
+                                                                       std::vector<unsigned char>(key.begin(), key.end()),
+                                                                       std::vector<unsigned char>(iv.begin(), iv.end()));
+  std::vector<unsigned char>* actual_plaintext = cryptolib::DecryptAES128CBC(std::vector<unsigned char>(ciphertext->begin(), ciphertext->end()),
+                                                                             std::vector<unsigned char>(key.begin(), key.end()),
+                                                                             std::vector<unsigned char>(iv.begin(), iv.end()));
+  std::vector<unsigned char>* expected_plaintext = cryptolib::PadText(plaintext_bytes, 16);
+  EXPECT_EQ(std::string(expected_plaintext->begin(), expected_plaintext->end()),
+            std::string(actual_plaintext->begin(), actual_plaintext->end()));
 }

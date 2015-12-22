@@ -30,7 +30,8 @@ std::vector<unsigned char>* PadText(const std::vector<unsigned char>& plaintext,
                                      int blocksize);
 
 std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& ciphertext, 
-                                             const std::vector<unsigned char>& key);
+                                             const std::vector<unsigned char>& key,
+                                             const std::vector<unsigned char>& iv);
 
 }  // namespace cryptolib
 
