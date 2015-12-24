@@ -1,5 +1,7 @@
 #include "cryptolib/encrypt.h"
 
+#include "stdlib.h"
+
 #include <iterator>
 #include <vector>
 
@@ -67,5 +69,13 @@ std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& p
   }
   return final_ciphertext;
 }
+
+std::vector<unsigned char>* GetRandom128Key() {
+  std::vector<unsigned char>* key = new std::vector<unsigned char>();
+  for (int i = 0; i < 16; i++) {
+    key->push_back(rand() % 256);
+  }
+  return key;  
+}       
 
 }  // namespace cryptolib

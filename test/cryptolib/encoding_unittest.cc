@@ -1,6 +1,7 @@
 #include "stdlib.h"
 
 #include "gtest/gtest.h"
+#include "cryptolib/analysis.h"
 #include "cryptolib/decrypt.h"
 #include "cryptolib/encoding.h"
 #include "cryptolib/encrypt.h"
@@ -209,4 +210,31 @@ TEST(EncryptTest, AES128CBCEncryptDecrypt) {
   std::vector<unsigned char>* expected_plaintext = cryptolib::PadText(plaintext_bytes, 16);
   EXPECT_EQ(std::string(expected_plaintext->begin(), expected_plaintext->end()),
             std::string(actual_plaintext->begin(), actual_plaintext->end()));
+}
+
+TEST(AnalysisTest, HasRepeatedBlock) {
+  std::string plaintext =
+    "Test to see whether HasRepeatedBlock can properly "
+    "identify the existence of a repated block of chars, "
+    "such as ABRACADABRAMAGIC and ABRACADABRAMAGIC.";
+
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(),
+                                                                          plaintext.end());
+  std::vector<unsigned char> first_block = std::vector<unsigned char>(plaintext_bytes.begin(),
+                                                                      plaintext_bytes.begin() + 16);
+  plaintext_bytes.insert(plaintext_bytes.begin(), first_block.begin(), first_block.end());
+
+  EXPECT_EQ(true, cryptolib::HasRepeatedBlock(plaintext_bytes, 16));
+}
+
+TEST(AnalysisTest, HasNoRepeatedBlock) {
+  std::string plaintext =
+    "Test to see whether HasRepeatedBlock works properly "
+    "identify the existence of a repated block of chars, "
+    "such as ABRACADABRAMAGIC and ABRACADABRAMAGIC.";
+
+  std::vector<unsigned char> plaintext_bytes = std::vector<unsigned char>(plaintext.begin(),
+                                                                          plaintext.end());
+
+  EXPECT_EQ(false, cryptolib::HasRepeatedBlock(plaintext_bytes, 16));
 }

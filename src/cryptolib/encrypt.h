@@ -33,6 +33,12 @@ std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& c
                                              const std::vector<unsigned char>& key,
                                              const std::vector<unsigned char>& iv);
 
+std::vector<unsigned char>* EncryptAES128ECB(const std::vector<unsigned char>& ciphertext, 
+                                             const std::vector<unsigned char>& key);
+
+// Generates a random 128-bit (16-byte) key.
+std::vector<unsigned char>* GetRandom128Key();
+
 }  // namespace cryptolib
 
 #endif  // CRYPTOLIB_ENCRYPT_H_
