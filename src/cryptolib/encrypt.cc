@@ -47,7 +47,6 @@ std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& p
                                              const std::vector<unsigned char>& iv) {
   const int BLOCKSIZE = 16;
   unsigned char previous_ciphertext_block[BLOCKSIZE];
-  /* unsigned char[] previous_ciphertext_block; */
   std::vector<unsigned char>* final_ciphertext = new std::vector<unsigned char>();
 
   AES_KEY* aes_key = new AES_KEY();
@@ -66,6 +65,26 @@ std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& p
     final_ciphertext->insert(std::end(*final_ciphertext),
                              std::begin(previous_ciphertext_block),
                              std::end(previous_ciphertext_block));
+  }
+  return final_ciphertext;
+}
+
+std::vector<unsigned char>* EncryptAES128ECB(const std::vector<unsigned char>& plaintext, 
+                                             const std::vector<unsigned char>& key) {
+  const int BLOCKSIZE = 16;
+  unsigned char ciphertext_block[BLOCKSIZE];
+  std::vector<unsigned char>* final_ciphertext = new std::vector<unsigned char>();
+
+  AES_KEY* aes_key = new AES_KEY();
+  AES_set_encrypt_key(&key[0], 128, aes_key);
+  std::vector<unsigned char>* padded_plaintext = PadText(plaintext, BLOCKSIZE);
+
+
+  for (int i = 0; i < padded_plaintext->size(); i += BLOCKSIZE) {
+    AES_encrypt(&((*padded_plaintext)[i]), ciphertext_block, aes_key);
+    final_ciphertext->insert(std::end(*final_ciphertext),
+                             std::begin(ciphertext_block),
+                             std::end(ciphertext_block));
   }
   return final_ciphertext;
 }

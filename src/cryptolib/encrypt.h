@@ -29,11 +29,11 @@ std::vector<unsigned char>* PadBlock(const std::vector<unsigned char>& plaintext
 std::vector<unsigned char>* PadText(const std::vector<unsigned char>& plaintext,
                                      int blocksize);
 
-std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& ciphertext, 
+std::vector<unsigned char>* EncryptAES128CBC(const std::vector<unsigned char>& plaintext, 
                                              const std::vector<unsigned char>& key,
                                              const std::vector<unsigned char>& iv);
 
-std::vector<unsigned char>* EncryptAES128ECB(const std::vector<unsigned char>& ciphertext, 
+std::vector<unsigned char>* EncryptAES128ECB(const std::vector<unsigned char>& plaintext, 
                                              const std::vector<unsigned char>& key);
 
 // Generates a random 128-bit (16-byte) key.

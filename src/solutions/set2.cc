@@ -1,9 +1,13 @@
 #include <fstream>
 
+#include "stdlib.h"
+
 #include "gtest/gtest.h"
 
+#include "cryptolib/analysis.h"
 #include "cryptolib/decrypt.h"
 #include "cryptolib/encoding.h"
+#include "cryptolib/encrypt.h"
 
 TEST(Set2, Challenge10_CBCMode) {
   std::ifstream ciphertext_file("../resources/ciphertext10.txt");
@@ -106,4 +110,51 @@ TEST(Set2, Challenge10_CBCMode) {
     "\x4\x4\x4\x4";
 
   EXPECT_EQ(expected_plaintext, actual_plaintext);
+}
+
+TEST(Set2, Challenge11_EncryptionModeOracle) {
+  std::vector<unsigned char>* ciphertext;
+  std::string string_plaintext = "abcdefghijklmno abcdefghijklmno abcdefghijklmno";
+  std::vector<unsigned char> plaintext = std::vector<unsigned char>(string_plaintext.begin(), string_plaintext.end());
+  const int NUM_TESTS = 1000;
+  int number_incorrect = 0;
+  srand(87915); // set seed, so test is reproducible
+
+  for (int i = 0; i < NUM_TESTS; i++) {
+    std::vector<unsigned char>* key = cryptolib::GetRandom128Key();
+    int prefix_length = (rand() % 5) + 5;
+    std::vector<unsigned char> random_prefix;
+    for (int i = 0; i < prefix_length; i++) {
+      random_prefix.push_back(rand() % 256);
+    }
+
+    int postfix_length = (rand() % 5) + 5;
+    std::vector<unsigned char> random_postfix;
+    for (int i = 0; i < postfix_length; i++) {
+      random_postfix.push_back(rand() % 256);
+    }
+
+    plaintext.insert(plaintext.begin(), random_prefix.begin(), random_prefix.end());
+    plaintext.insert(plaintext.end(), random_postfix.begin(), random_postfix.end());
+
+    cryptolib::AESMode mode = static_cast<cryptolib::AESMode>(rand() % 2);
+    switch (mode) {
+      case cryptolib::ECB: {
+        ciphertext = cryptolib::EncryptAES128ECB(plaintext, *key);
+        break;
+      }
+      case cryptolib::CBC: {
+        std::vector<unsigned char>* iv = cryptolib::GetRandom128Key();
+        ciphertext = cryptolib::EncryptAES128CBC(plaintext, *key, *iv);
+        break;
+      }
+      default: {
+        assert(false);
+      }
+    }
+    if (mode != cryptolib::GetAESBlockMode(*ciphertext)) {
+      number_incorrect++;
+    }
+  }
+  EXPECT_EQ(0, number_incorrect);
 }

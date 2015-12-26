@@ -40,7 +40,7 @@ double GetBlockEntropy(std::string ciphertext, int blocksize) {
 }
 
 // TODO DRY this up (w/ above frequencies implementation)
-bool HasRepeatedBlock(std::vector<unsigned char>& ciphertext, int blocksize) {
+bool HasRepeatedBlock(const std::vector<unsigned char>& ciphertext, int blocksize) {
   // TODO handle partial blocks properly!
   std::map<std::vector<unsigned char>, int> frequencies;
   int size = ciphertext.size();

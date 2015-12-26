@@ -14,7 +14,7 @@ enum AESMode {
 // TODO should this be string or vec
 double GetBlockEntropy(std::string ciphertext, int blocksize);
 
-bool HasRepeatedBlock(std::vector<unsigned char>& ciphertext, int blocksize);
+bool HasRepeatedBlock(const std::vector<unsigned char>& ciphertext, int blocksize);
 
 AESMode GetAESBlockMode(const std::vector<unsigned char>& ciphertext);
 
