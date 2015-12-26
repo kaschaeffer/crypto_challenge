@@ -61,9 +61,13 @@ bool HasRepeatedBlock(std::vector<unsigned char>& ciphertext, int blocksize) {
 
 }
 
-/* AESMode GetAESBlockMode(const std::vector<unsigned char>& ciphertext) { */
-/*   // TODO */
-
-/* } */
+AESMode GetAESBlockMode(const std::vector<unsigned char>& ciphertext) {
+  const int BLOCKSIZE = 16;
+  if (HasRepeatedBlock(ciphertext, BLOCKSIZE)) {
+    return ECB;
+  } else {
+    return CBC;
+  }
+}
 
 }  // namespace cryptolib

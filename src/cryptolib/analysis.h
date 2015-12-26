@@ -7,7 +7,7 @@
 namespace cryptolib {
 
 enum AESMode {
-  EBC = 0,
+  ECB = 0,
   CBC = 1,
 };
 
