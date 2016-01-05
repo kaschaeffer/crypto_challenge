@@ -39,6 +39,28 @@ std::vector<unsigned char>* EncryptAES128ECB(const std::vector<unsigned char>& p
 // Generates a random 128-bit (16-byte) key.
 std::vector<unsigned char>* GetRandom128Key();
 
+class Cipher {
+ public:
+  Cipher();
+  virtual ~Cipher();
+
+  virtual std::vector<unsigned char>* encrypt(const std::vector<unsigned char>& plaintext) const = 0;
+  virtual std::vector<unsigned char>* decrypt(const std::vector<unsigned char>& ciphertext) const = 0;
+};
+
+class AES128ECBCipher : public Cipher {
+ public:
+  explicit AES128ECBCipher(const std::vector<unsigned char>& key);
+  ~AES128ECBCipher();
+
+  std::vector<unsigned char>* encrypt(const std::vector<unsigned char>& plaintext) const override;
+  std::vector<unsigned char>* decrypt(const std::vector<unsigned char>& ciphertext) const override;
+
+ private:
+  const std::vector<unsigned char> key;
+};
+
+
 }  // namespace cryptolib
 
 #endif  // CRYPTOLIB_ENCRYPT_H_

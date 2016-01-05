@@ -158,3 +158,15 @@ TEST(Set2, Challenge11_EncryptionModeOracle) {
   }
   EXPECT_EQ(0, number_incorrect);
 }
+
+TEST(Set2, Challenge12_BasicECBDecryption) {
+  std::string base64_plaintext = 
+    "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg"
+    "aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq"
+    "dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg"
+    "YnkK";
+  std::vector<unsigned char> plaintext = cryptolib::Base64ToBytes(base64_plaintext);
+
+  // determine block size
+
+}

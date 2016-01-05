@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <map>
 
+#include "cryptolib/encrypt.h"
+
 namespace {
 
 std::map<std::string, double> getBlockFrequencies(std::string ciphertext,
@@ -68,6 +70,23 @@ AESMode GetAESBlockMode(const std::vector<unsigned char>& ciphertext) {
   } else {
     return CBC;
   }
+}
+
+int GetBlockSize(const cryptolib::Cipher& cipher) {
+  const int MAX_SIZE = 10000;
+  std::vector<unsigned char>* ciphertext;
+  std::vector<unsigned char> plaintext = {'A'};
+  int initial_ciphertext_size = cipher.encrypt(plaintext)->size();
+
+  for (int plaintext_size = 1; plaintext_size < MAX_SIZE; plaintext_size++) {
+    plaintext.push_back('A');
+    ciphertext = cipher.encrypt(plaintext);
+    if (ciphertext->size() != initial_ciphertext_size) {
+      return ciphertext->size() - initial_ciphertext_size;
+    }
+  }
+  // TODO add error handling
+  return 0;
 }
 
 }  // namespace cryptolib
