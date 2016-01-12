@@ -89,4 +89,71 @@ int GetBlockSize(const cryptolib::Cipher& cipher) {
   return 0;
 }
 
+// TODO change this to accept an oracle?
+std::vector<unsigned char>* AESDecrypt(const cryptolib::Cipher& cipher,
+                                       const std::vector<unsigned char>& plaintext) {
+  int blocksize = GetBlockSize(cipher);
+
+  std::vector<unsigned char> probing_plaintext;
+  for (int i = 0; i < blocksize - 1; i ++) {
+    probing_plaintext.push_back('A');
+  }
+
+  /* probing_plaintext.insert(std::begin(probing_plaintext), */
+  /*                          std::begin(plaintext), */
+  /*                          std::end(plaintext)); */
+  // xxxx xxxx xxxx xxxx
+  //
+  // AAAx xxxx xxxx xxxx xxx
+  // AAA? ???? ???? ???? ???
+  //
+  // what to feed to oracle:
+  // 1)   AAA(?)
+  // 2)   AAx(?)
+  // 3)   Axy(?)
+  // 4)   xyz(?)
+  // 5)   AAAx yzw(?)
+  /* for (int i = 0; i < plaintext.size(); i++) { */
+
+
+
+  // TODO encrypt this and record the 
+  std::map<std::vector<unsigned char>, unsigned char> byte_map;
+  std::vector<unsigned char> one_byte_probe;
+  std::vector<unsigned char>* key;
+  for (int i = 0; i < blocksize - 1; i ++) {
+    one_byte_probe.push_back('A');
+  }
+  
+  for (int b = 0; b < 128; b++) {
+    one_byte_probe.pop_back();
+    one_byte_probe.push_back(b);
+    key = cipher.encrypt(one_byte_probe);
+    byte_map[*key] = b;
+  }
+  
+  // TODO 
+  std::vector<unsigned char>* probing_ciphertext = cipher.encrypt(probing_plaintext);
+  std::vector<unsigned char> probing_block(probing_ciphertext->begin(),
+                                           probing_ciphertext->begin() + blocksize);
+  unsigned char byte = byte_map[probing_block];
+
+  // TODO dummy vector to make this compile
+  std::vector<unsigned char>* dummy = new std::vector<unsigned char>();
+  return dummy;
+}
+
+bool ValidatePadding(const std::vector<unsigned char> text) {
+  bool is_valid = true;
+  int size = text.size();
+  int padding_length = text[size - 1];
+  for (int i = size - 1; i >= size - padding_length; i--) {
+    if (text[i] != padding_length) {
+      is_valid = false;
+      break;
+    }
+  }
+  return is_valid;
+}
+
 }  // namespace cryptolib

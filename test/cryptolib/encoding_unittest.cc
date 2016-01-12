@@ -255,3 +255,24 @@ TEST(AnalysisTest, HasNoRepeatedBlock) {
 
   EXPECT_EQ(false, cryptolib::HasRepeatedBlock(plaintext_bytes, 16));
 }
+
+TEST(AnalysisTest, ValidatePadding) {
+  std::string text = "ICE ICE BABY\x04\x04\x04\x04";
+  std::vector<unsigned char> text_bytes = std::vector<unsigned char>(text.begin(),
+                                                                     text.end());
+  EXPECT_EQ(true, cryptolib::ValidatePadding(text_bytes));
+}
+
+TEST(AnalysisTest, ValidatePaddingInvalid) {
+  std::string text = "ICE ICE BABY\x09\x04\x04\x04";
+  std::vector<unsigned char> text_bytes = std::vector<unsigned char>(text.begin(),
+                                                                     text.end());
+  EXPECT_EQ(false, cryptolib::ValidatePadding(text_bytes));
+}
+
+TEST(AnalysisTest, ValidatePaddingInvalid2) {
+  std::string text = "ICE ICE BABY\x09\x09\x09\x09\x09\x09";
+  std::vector<unsigned char> text_bytes = std::vector<unsigned char>(text.begin(),
+                                                                     text.end());
+  EXPECT_EQ(false, cryptolib::ValidatePadding(text_bytes));
+}

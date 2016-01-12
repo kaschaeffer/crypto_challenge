@@ -21,6 +21,12 @@ bool HasRepeatedBlock(const std::vector<unsigned char>& ciphertext, int blocksiz
 
 AESMode GetAESBlockMode(const std::vector<unsigned char>& ciphertext);
 
+AESMode GetAESBlockMode(const cryptolib::Cipher& cipher);
+
+std::vector<unsigned char>* AESDecrypt(const cryptolib::Cipher& cipher,
+                                       const std::vector<unsigned char>& ciphertext);
+
+bool ValidatePadding(const std::vector<unsigned char> text);
 }
 
 
