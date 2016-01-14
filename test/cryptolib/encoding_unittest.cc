@@ -1,3 +1,4 @@
+#include <map>
 #include "stdlib.h"
 
 #include "gtest/gtest.h"
@@ -275,4 +276,27 @@ TEST(AnalysisTest, ValidatePaddingInvalid2) {
   std::vector<unsigned char> text_bytes = std::vector<unsigned char>(text.begin(),
                                                                      text.end());
   EXPECT_EQ(false, cryptolib::ValidatePadding(text_bytes));
+}
+
+TEST(AnalysisTest, ParseKeyValueString) {
+  std::string text = "foo=bar&baz=qux&zap=zazzle";
+  std::map<std::string, std::string> expected = {{"foo", "bar"},
+                                                 {"baz", "qux"},
+                                                 {"zap", "zazzle"}};
+
+  EXPECT_EQ(expected, *cryptolib::ParseKeyValueString(text));
+}
+
+TEST(AnalysisTest, ParseKeyValueStringEmpty) {
+  std::string text = "";
+  std::map<std::string, std::string> expected = {};
+
+  EXPECT_EQ(expected, *cryptolib::ParseKeyValueString(text));
+}
+
+TEST(AnalysisTest, ParseKeyValueStringOnePair) {
+  std::string text = "quux=fuzz";
+  std::map<std::string, std::string> expected = {{"quux", "fuzz"}};
+
+  EXPECT_EQ(expected, *cryptolib::ParseKeyValueString(text));
 }

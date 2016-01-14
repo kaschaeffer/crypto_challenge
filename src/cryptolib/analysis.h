@@ -1,6 +1,7 @@
 #ifndef CRYPTOLIB_ANALYSIS_H_
 #define CRYPTOLIB_ANALYSIS_H_
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -26,7 +27,9 @@ AESMode GetAESBlockMode(const cryptolib::Cipher& cipher);
 std::vector<unsigned char>* AESDecrypt(const cryptolib::Cipher& cipher,
                                        const std::vector<unsigned char>& ciphertext);
 
-bool ValidatePadding(const std::vector<unsigned char> text);
+bool ValidatePadding(const std::vector<unsigned char>& text);
+
+std::map<std::string, std::string>* ParseKeyValueString(const std::string& key_value_string);
 }
 
 

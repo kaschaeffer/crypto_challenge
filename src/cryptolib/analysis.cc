@@ -143,7 +143,7 @@ std::vector<unsigned char>* AESDecrypt(const cryptolib::Cipher& cipher,
   return dummy;
 }
 
-bool ValidatePadding(const std::vector<unsigned char> text) {
+bool ValidatePadding(const std::vector<unsigned char>& text) {
   bool is_valid = true;
   int size = text.size();
   int padding_length = text[size - 1];
@@ -154,6 +154,39 @@ bool ValidatePadding(const std::vector<unsigned char> text) {
     }
   }
   return is_valid;
+}
+
+std::map<std::string, std::string>* ParseKeyValueString(const std::string& key_value_string) {
+  // parses strings of the form key1=value1&key2=value2&...
+  // TODO should handle improperly formatted strings properly
+  std::map<std::string, std::string>* keyvalue = new std::map<std::string, std::string>();
+  auto key_start = key_value_string.begin();
+  auto key_end = key_value_string.begin();
+  auto value_start = key_value_string.begin();
+  auto value_end = key_value_string.begin();
+  std::string key;
+  std::string value;
+
+  while (value_end != key_value_string.end()) {
+    while (*key_end != '=') {
+      key_end++;
+    }
+    key = std::string(key_start, key_end);
+
+    value_start = key_end + 1;
+    value_end = key_end + 1;
+
+    while (*value_end != '&' && value_end != key_value_string.end()) {
+      value_end++;
+    }
+    value = std::string(value_start, value_end);
+
+    key_start = value_end + 1;
+    key_end = value_end + 1;
+
+    (*keyvalue)[key] = value;
+  }
+  return keyvalue;
 }
 
 }  // namespace cryptolib
